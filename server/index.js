@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 
 import userRoutes from "./routes/user.js";
 import authRoutes from "./routes/auth.js";
+import tweetRoutes from "./routes/tweet.js";
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/tweets", tweetRoutes);
 
 app.listen(8080, () => {
   connect();
