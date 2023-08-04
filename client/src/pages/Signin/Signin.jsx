@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 const Signin = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -17,9 +18,29 @@ const Signin = () => {
 
     try {
       const res = await axios.post("/auth/signin", { username, password });
+
       dispatch(loginSuccess(res.data));
       navigate("/");
       console.log(res.data);
+    } catch (err) {
+      dispatch(loginFailed);
+      //console.log(err);
+    }
+  };
+
+  const signupHandler = async (event) => {
+    event.preventDefault();
+    dispatch(loginStart());
+
+    try {
+      const res = await axios.post("/auth/signup", {
+        username,
+        password,
+        email,
+      });
+      dispatch(loginSuccess(res.data));
+      console.log(res.data);
+      navigate("/");
     } catch (err) {
       dispatch(loginFailed);
       console.log(err);
@@ -52,21 +73,26 @@ const Signin = () => {
           Create an account!
         </p>
         <input
+          onChange={(event) => setUsername(event.target.value)}
           type="text"
           placeholder="username"
           className="text-xl  py-2 rounded-full px-4"
         ></input>
         <input
+          onChange={(event) => setEmail(event.target.value)}
           type="email"
+          required
           placeholder="email"
           className="text-xl  py-2 rounded-full px-4"
         ></input>
         <input
+          onChange={(event) => setPassword(event.target.value)}
           type="password"
           placeholder="password"
           className="text-xl  py-2 rounded-full px-4"
         ></input>
         <button
+          onClick={signupHandler}
           className="text-xl py-2 rounded-full px-4 bg-blue-500 text-white"
           type="submit"
         >
