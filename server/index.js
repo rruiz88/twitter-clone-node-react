@@ -23,6 +23,7 @@ const connect = () => {
 
 app.use(cookieParser());
 app.use(express.json());
+
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/tweets", tweetRoutes);
