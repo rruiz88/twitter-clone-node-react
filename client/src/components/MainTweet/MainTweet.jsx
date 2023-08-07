@@ -1,4 +1,5 @@
 import React from "react";
+import TimelineTweet from "../TimelineTweet/TimelineTweet";
 
 const MainTweet = () => {
   return (
@@ -15,7 +16,7 @@ const MainTweet = () => {
           Tweet!
         </button>
       </form>
-      timeline goes here
+      <TimelineTweet />
     </div>
   );
 };
