@@ -1,38 +1,51 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import formatDistance from "date-fns/formatDistance";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 
 const Tweet = ({ tweet, setData }) => {
   const { currentUser } = useSelector((state) => state.user);
-  const { userData, setUserData } = useState();
+  const [userData, setUserData] = useState();
   const dateStr = formatDistance(new Date(tweet.createdAt), new Date());
+  const location = useLocation().pathname;
+  const { id } = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const findUser = await axios.get(`/users/find/${tweet.userId}`);
+        const findUser = await axios.get(`/user/find/${tweet.userId}`);
         setUserData(findUser.data);
       } catch (err) {
         console.log(err);
       }
     };
     fetchData();
-  }, [tweet.userId, tweet.likes, setUserData]);
+  }, [tweet.userId, tweet.likes]);
 
   const likeHandler = async (event) => {
     event.preventDefault();
 
-    //   try {
-    //     const like = await axios.put(`/tweets/${tweet._id}/like`, {
-    //       id: currentUser._id,
-    //     });
-    //   } catch (err) {
-    //     console.log(err);
-    //   }
+    try {
+      const like = await axios.put(`/tweets/${tweet._id}/like`, {
+        id: currentUser._id,
+      });
+
+      if (location.includes("profile")) {
+        const newData = await axios.get(`tweets/user/all/${id}`);
+        setData(newData.data);
+      } else if (location.includes("explore")) {
+        const newData = await axios.get(`/tweets/explore`);
+        setData(newData.data);
+      } else {
+        const newData = await axios.get(`/tweets/timeline/${currentUser._id}`);
+        setData(newData.data);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -43,10 +56,10 @@ const Tweet = ({ tweet, setData }) => {
             {/* <img src="" alt="" /> */}
 
             <Link to={`/profile/${userData._id}`}>
-              <h3 className="font-bold">{userData.username}</h3>
+              <h3 className="font-bold text-sky-500">{userData.username}</h3>
             </Link>
-            <span className="font-normal">@{userData.username}</span>
-            <p> - {dateStr} </p>
+            <span className="font-normal ">@{userData.username}</span>
+            <p> - {dateStr} ago</p>
           </div>
 
           <p>{tweet.description}</p>
