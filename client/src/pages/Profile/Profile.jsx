@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import LeftSidebar from "../../components/LeftSidebar/LeftSidebar";
 import RightSidebar from "../../components/RightSidebar/RightSidebar";
+import EditProfile from "../../components/EditProfile/EditProfile";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
@@ -17,7 +18,7 @@ const Profile = () => {
     const fetchData = async () => {
       try {
         const userTweet = await axios.get(`/tweets/user/all/${id}`);
-        const userProfile = await axios.get(`/users/find/${id}`);
+        const userProfile = await axios.get(`/user/find/${id}`);
 
         setUserTweet(userTweet.data);
         setUserProfile(userProfile.data);
@@ -71,7 +72,7 @@ const Profile = () => {
           <RightSidebar />
         </div>
       </div>
-      {/* {openModal && <EditProfile setOpenModal={setOpenModal} />} */}
+      {openModal && <EditProfile setOpenModal={setOpenModal} />}
     </>
   );
 };
