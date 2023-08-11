@@ -24,10 +24,13 @@ export const userSlice = createSlice({
     logout: (state) => {
       return initialState;
     },
+    changeProfile: (state, action) => {
+      state.currentUser.profilePicture = action.payload;
+    },
   },
 });
 
-export const { loginFailed, loginStart, logout, loginSuccess } =
+export const { loginFailed, loginStart, logout, loginSuccess, changeProfile } =
   userSlice.actions;
 
 export default userSlice.reducer;

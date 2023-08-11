@@ -6,11 +6,19 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 
+import { changeProfile, logout } from "../../redux/userSlice";
 import app from "../../firebase";
+import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const EditProfile = ({ setOpenModal }) => {
+  const { currentUser } = useSelector((state) => state.user);
   const [img, setImg] = useState(null);
   const [imgUploadProgress, setImgUploadProgress] = useState(0);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const uploadImg = (file) => {
     const storage = getStorage(app);
@@ -52,11 +60,25 @@ const EditProfile = ({ setOpenModal }) => {
       },
       () => {
         // upload successful
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          console.log("File available at", downloadURL);
+        getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+          try {
+            const updateProfile = await axios.put(`/user/${currentUser._id}`, {
+              profilePicture: downloadURL,
+            });
+            console.log("File available at", downloadURL);
+          } catch (err) {
+            console.log(err);
+          }
+          dispatch(changeProfile(downloadURL));
         });
       }
     );
+  };
+
+  const deleteHandler = async () => {
+    const deleteProfile = await axios.delete(`/user/${currentUser._id}`);
+    dispatch(logout());
+    navigate("/signin");
   };
 
   useEffect(() => {

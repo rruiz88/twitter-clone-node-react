@@ -36,7 +36,11 @@ const Profile = () => {
         </div>
         <div className="col-span-2 border-x-2 border-t-slate-800 px-6">
           <div className="flex justify-between items-center">
-            {/* <img src="" alt="" /> */}
+            <img
+              src={userProfile?.profilePicture}
+              alt="Profile"
+              className="w-12 h-12 rounded-full"
+            />
             {currentUser._id === id ? (
               <button
                 className="px-4 py-2 bg-blue-500 rounded-full text-white"
