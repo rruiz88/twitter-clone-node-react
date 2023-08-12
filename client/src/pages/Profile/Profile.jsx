@@ -3,9 +3,10 @@ import LeftSidebar from "../../components/LeftSidebar/LeftSidebar";
 import RightSidebar from "../../components/RightSidebar/RightSidebar";
 import EditProfile from "../../components/EditProfile/EditProfile";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import Tweet from "../../components/Tweet/Tweet";
+import { following } from "../../redux/userSlice";
 
 const Profile = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -13,6 +14,7 @@ const Profile = () => {
   const { id } = useParams();
   const [userTweet, setUserTweet] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,6 +30,28 @@ const Profile = () => {
     };
     fetchData();
   }, [currentUser, id]);
+
+  const followHandler = async () => {
+    if (!currentUser.following.includes(id)) {
+      try {
+        const follow = await axios.put(`/user/follow/${id}`, {
+          id: currentUser._id,
+        });
+        dispatch(following(id));
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      try {
+        const unfollow = await axios.put(`/user/unfollow/${id}`, {
+          id: currentUser._id,
+        });
+        dispatch(following(id));
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-4">
@@ -51,11 +75,17 @@ const Profile = () => {
                 Edit Profile
               </button>
             ) : currentUser.following.includes(id) ? (
-              <button className="px-4 py-2 bg-blue-500 rounded-full text-white">
+              <button
+                className="px-4 py-2 bg-blue-500 rounded-full text-white"
+                onClick={followHandler}
+              >
                 Following
               </button>
             ) : (
-              <button className="px-4 py-2 bg-blue-500 rounded-full text-white">
+              <button
+                className="px-4 py-2 bg-blue-500 rounded-full text-white"
+                onClick={followHandler}
+              >
                 Follow
               </button>
             )}

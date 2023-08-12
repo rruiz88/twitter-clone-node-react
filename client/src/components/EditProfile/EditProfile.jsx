@@ -107,7 +107,10 @@ const EditProfile = ({ setOpenModal }) => {
           ></input>
         )}
 
-        <button className="bg-red-500 text-white py-2 rounded-full">
+        <button
+          onClick={deleteHandler}
+          className="bg-red-500 text-white py-2 rounded-full"
+        >
           Delete account
         </button>
       </div>
