@@ -27,6 +27,6 @@ router.get("/timeline/:id", getAllTweets);
 router.get("/user/all/:id", getUserTweets);
 
 // get explore/liked tweets
-router.get("/", getExploreTweets);
+router.get("/explore", getExploreTweets);
 
 export default router;
